@@ -2,7 +2,7 @@
 using PreTrainee_Month2.CoreLayer;
 using PreTrainee_Month2.CoreLayer.Product_Entities;
 
-namespace PreTrainee_Month2.InfrastructureLayer.DBContext
+namespace PreTrainee_Month2.InfrastructureLayer.DataBaseContext
 {
     public class DBContext:DbContext
     {

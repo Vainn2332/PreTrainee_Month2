@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PreTrainee_Month2.CoreLayer;
 
-namespace PreTrainee_Month2.InfrastructureLayer.DBContext
+namespace PreTrainee_Month2.InfrastructureLayer.DataBaseContext
 {
     public class UserDBConfiguration : IEntityTypeConfiguration<User>
     {
