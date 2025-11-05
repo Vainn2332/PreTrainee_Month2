@@ -25,7 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="CoreLayer\" />
     <Folder Include="ApplicationLayer\" />
     <Folder Include="InfrastructureLayer\" />
   </ItemGroup>
