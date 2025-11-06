@@ -2,7 +2,7 @@
 {
     public interface IUserRepository:IRepository<User>
     {
-        public Task GetAllWithProducts();
-        public Task GetWithProducts(int id);
+        public Task<IEnumerable<User>> GetAllWithProducts();
+        public Task<User> GetWithProducts(int id);
     }
 }
