@@ -6,7 +6,7 @@ using PreTrainee_Month2.CoreLayer.Repository_Interfaces;
 using PreTrainee_Month2.InfrastructureLayer.DataBaseContext;
 namespace PreTrainee_Month2.InfrastructureLayer.Repositories
 {
-    public class UserRepository : IRepository<User>
+    public class UserRepository : IUserRepository
     {
         private DBContext _dbContext;
         public UserRepository(DBContext dbContext)
