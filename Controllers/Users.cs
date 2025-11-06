@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PreTrainee_Month2.ApplicationLayer.ServiceInterfaces;
+using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,20 +10,37 @@ namespace PreTrainee_Month2.Controllers
     [ApiController]
     public class Users : ControllerBase
     {
+        private IUserService _userService;
+
+        public Users(IUserService userService)
+        {
+            _userService = userService;
+        }
+
         // GET: api/<Users>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<IActionResult> Get()
         {
-            return new string[] { "value1", "value2" };
+            return Ok(await _userService.GetAllUsersAsync());
+        }
+
+        [HttpGet("UsersWithProducts")]
+        public async Task<IActionResult> GetUsersWithProducts()
+        {
+            return Ok(await _userService.GetAllUsersWithProductsAsync());
         }
 
         // GET api/<Users>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            return "value";
+            return Ok(await _userService.GetUserAsync(id));
         }
-
+        [HttpGet("UserWithProducts/{id}")]
+        public async Task<IActionResult> GetWithProducts(int id)
+        {
+            return Ok(await _userService.GetUserWithProductsAsync(id));
+        }
         // POST api/<Users>
         [HttpPost]
         public void Post([FromBody] string value)

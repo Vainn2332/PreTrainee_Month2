@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using PreTrainee_Month2.ApplicationLayer.ServiceInterfaces;
 using PreTrainee_Month2.ApplicationLayer.Services;
 using PreTrainee_Month2.CoreLayer.Product_Entities;
 using PreTrainee_Month2.CoreLayer.Repository_Interfaces;
@@ -17,9 +18,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<IRepository<Product>, ProductRepository>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 
-builder.Services.AddTransient<ProductService>();
-builder.Services.AddTransient<UserService>();
-
+builder.Services.AddTransient<IProductService,ProductService>();
+builder.Services.AddTransient<IUserService,UserService>();
 builder.Services.AddDbContext<DBContext>(
     options =>
     {
