@@ -12,7 +12,7 @@ namespace PreTrainee_Month2.InfrastructureLayer.Repositories
         {
             _dbContext = dbContext;
         }
-        public async Task<IEnumerable<User>> GetAsync()
+        public async Task<IEnumerable<User>> GetAllAsync()
         {
             return await _dbContext.Users.AsNoTracking().ToListAsync();
         }
