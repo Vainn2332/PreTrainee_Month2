@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using PreTrainee_Month2.CoreLayer;
 using PreTrainee_Month2.CoreLayer.Repository_Interfaces;
@@ -12,11 +13,27 @@ namespace PreTrainee_Month2.InfrastructureLayer.Repositories
         {
             _dbContext = dbContext;
         }
+
+        public async Task<IEnumerable<User>> GetAllWithProducts()
+        {
+            return await _dbContext.Users
+                .Include(u=>u.Products)
+                .AsNoTracking()
+                .ToListAsync();
+        }
         public async Task<IEnumerable<User>> GetAllAsync()
         {
             return await _dbContext.Users.AsNoTracking().ToListAsync();
         }
-        public async Task<User> Get(int id)
+        public async Task<User?> GetWithProducts(int id)
+        {
+            return await _dbContext.Users
+                .Include(u=>u.Products)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.ID == id);
+        }
+
+        public async Task<User?> Get(int id)
         {
             return await _dbContext.Users
                 .AsNoTracking()
