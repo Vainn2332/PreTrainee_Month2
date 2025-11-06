@@ -1,9 +1,10 @@
-﻿using PreTrainee_Month2.CoreLayer.Product_Entities;
+﻿using PreTrainee_Month2.ApplicationLayer.ServiceInterfaces;
+using PreTrainee_Month2.CoreLayer.Product_Entities;
 using PreTrainee_Month2.CoreLayer.Repository_Interfaces;
 
 namespace PreTrainee_Month2.ApplicationLayer.Services
 {
-    public class ProductService
+    public class ProductService:IProductService
     {
         private IRepository<Product> _productRepository;
 
