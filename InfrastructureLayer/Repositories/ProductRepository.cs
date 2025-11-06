@@ -19,7 +19,7 @@ namespace PreTrainee_Month2.InfrastructureLayer.Repositories
         {
             return await _dbContext.Products.AsNoTracking().ToListAsync();
         }
-        public async Task<Product?> Get(int id)
+        public async Task<Product?> GetAsync(int id)
         {
             return await _dbContext.Products
                 .FirstOrDefaultAsync(p => p.ID == id);

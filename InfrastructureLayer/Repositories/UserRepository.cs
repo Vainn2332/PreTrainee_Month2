@@ -14,7 +14,7 @@ namespace PreTrainee_Month2.InfrastructureLayer.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<User>> GetAllWithProducts()
+        public async Task<IEnumerable<User>> GetAllWithProductsAsync()
         {
             return await _dbContext.Users
                 .Include(u=>u.Products)
@@ -25,7 +25,7 @@ namespace PreTrainee_Month2.InfrastructureLayer.Repositories
         {
             return await _dbContext.Users.AsNoTracking().ToListAsync();
         }
-        public async Task<User?> GetWithProducts(int id)
+        public async Task<User?> GetWithProductsAsync(int id)
         {
             return await _dbContext.Users
                 .Include(u=>u.Products)
@@ -33,7 +33,7 @@ namespace PreTrainee_Month2.InfrastructureLayer.Repositories
                 .FirstOrDefaultAsync(u => u.ID == id);
         }
 
-        public async Task<User?> Get(int id)
+        public async Task<User?> GetAsync(int id)
         {
             return await _dbContext.Users
                 .AsNoTracking()
