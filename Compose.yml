@@ -2,21 +2,14 @@
 
 services:
 
- sqlserver:
-  image:
-   mcr.microsoft.com/mssql/server
-  
+ web_api:
+  build: .
   container_name:
-   mssqlserver_container    
-  
-  volumes:
-   - sqlserver_volume:/var/opt/mssql
-  ports:
-   - "1433:1433" 
+   web_api_container
   networks:
    - application_net
-  environment:
-   - ACCEPT_EULA=Y
+  ports:
+   - "8080:80"  
 
 
 networks:
@@ -24,5 +17,3 @@ networks:
   driver:
    bridge
 
-volumes:
-    sqlserver_volume:
