@@ -1,0 +1,17 @@
+﻿services:
+
+
+ web_api:
+  build: .
+  container_name:
+   webAPI_container
+  networks:
+   - application_net
+  ports:
+   - "8080:80"  
+
+networks:
+ application_net:
+  driver:
+   bridge
+
