@@ -45,25 +45,29 @@ namespace PreTrainee_Month2.Controllers
         }
         // POST api/<Users>
         [HttpPost]
-        public void Post([FromBody] UserDTO userdto)
+        public async Task<IActionResult> Post([FromBody] UserDTO userDTO)
         {
-          /*  User user = new User()
-            {
-
-            }
-            return Ok(_userService.AddUserAsync())*/
+           // if(!ModelState.IsValid)
+                
+            User user = new User(userDTO);
+            await _userService.AddUserAsync(user);
+            return Ok();
         }
 
         // PUT api/<Users>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Put(int id, [FromBody] UserDTO userDTO)
         {
+            User user = new User(userDTO);
+            await _userService.UpdateUserAsync(id, user);
+            return Ok();
         }
 
         // DELETE api/<Users>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task Delete(int id)
         {
+            await _userService.DeleteUserAsync(id);
         }
     }
 }

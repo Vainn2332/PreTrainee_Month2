@@ -57,7 +57,6 @@ namespace PreTrainee_Month2.InfrastructureLayer.Repositories
         {
             await _dbContext.Users.Where(u => u.ID == id)
                  .ExecuteUpdateAsync(p =>p
-                 .SetProperty(s => s.Products, newUser.Products)
                  .SetProperty(s => s.EmailAddress, newUser.EmailAddress)
                  .SetProperty(s => s.Name, newUser.Name)
                  .SetProperty(s => s.Role, newUser.Role));
