@@ -13,5 +13,20 @@
         
         //для связи в EF
         public User Owner { get; set; }
+
+        public Product()
+        {
+                
+        }
+        public Product(ProductDTO productDTO)
+        {
+            Name = productDTO.Name;
+            Description = productDTO.Description;
+            Price = productDTO.Price;
+            DateOfCreation = DateTime.UtcNow;
+            UserId = productDTO.UserId;
+        }
+
+
     }
 }
