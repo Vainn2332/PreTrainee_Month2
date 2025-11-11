@@ -10,11 +10,11 @@ namespace PreTrainee_Month2.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class Users : ControllerBase
+    public class UsersController : ControllerBase
     {
         private IUserService _userService;
 
-        public Users(IUserService userService)
+        public UsersController(IUserService userService)
         {
             _userService = userService;
         }
