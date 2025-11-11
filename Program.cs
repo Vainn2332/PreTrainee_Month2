@@ -23,7 +23,7 @@ builder.Services.AddTransient<IUserService,UserService>();
 builder.Services.AddDbContext<DBContext>(
     options =>
     {
-        options.UseNpgsql("Host=postgres;Port=5432;UserId=postgres;Password=1234;Database=mydata;");
+        options.UseNpgsql("Host=host.docker.internal;Port=5432;UserId=postgres;Password=1234;Database=mydata;");
        
     });
 var app = builder.Build();
