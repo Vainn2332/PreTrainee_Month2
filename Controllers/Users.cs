@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PreTrainee_Month2.ApplicationLayer.ServiceInterfaces;
+using PreTrainee_Month2.CoreLayer;
+using PreTrainee_Month2.CoreLayer.User_Entities;
 using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -43,8 +45,13 @@ namespace PreTrainee_Month2.Controllers
         }
         // POST api/<Users>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post([FromBody] UserDTO userdto)
         {
+          /*  User user = new User()
+            {
+
+            }
+            return Ok(_userService.AddUserAsync())*/
         }
 
         // PUT api/<Users>/5
