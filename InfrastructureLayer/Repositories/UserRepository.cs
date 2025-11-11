@@ -1,6 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using PreTrainee_Month2.CoreLayer;
 using PreTrainee_Month2.CoreLayer.Repository_Interfaces;
 using PreTrainee_Month2.InfrastructureLayer.DataBaseContext;

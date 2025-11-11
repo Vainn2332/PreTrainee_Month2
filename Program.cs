@@ -23,7 +23,7 @@ builder.Services.AddTransient<IUserService,UserService>();
 builder.Services.AddDbContext<DBContext>(
     options =>
     {
-        options.UseNpgsql(@"Host=postgres;UserId=postgres;Password=1234;Database=mydata;"
+        options.UseNpgsql("Host=localhost;UserId=postgres;Password=1234;Database=mydata;"
         , b => b.MigrationsAssembly("PreTrainee_Month2"));
     });
 var app = builder.Build();
