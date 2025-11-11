@@ -11,6 +11,8 @@
       - postgres-data:/var/lib/postgresql/data
     networks:
       - application_net
+    ports:
+      - "5432:5432"
  
 
   web_api:
