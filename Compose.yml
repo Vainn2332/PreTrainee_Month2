@@ -1,36 +1,43 @@
 ﻿services:
 
- sqlserver:
-  image:
-   mcr.microsoft.com/mssql/server
-  
-  container_name:
-   mssqlserver_container    
-  
-  volumes:
-   - sqlserver_volume:/var/opt/mssql
-  ports:
-   - "1433:1433" 
-  networks:
-   - application_net
-  environment:
-   - ACCEPT_EULA=Y
+  postgres:
+    image: postgres:17-alpine  
+    container_name: postgres_container    
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_DB=mydata
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - application_net
+ 
 
- web_api:
-  build: .
-  container_name:
-   webAPI_container
-  networks:
-   - application_net
-  ports:
-   - "8080:8080"  
-  depends_on:
-   - sqlserver
+  web_api:
+    build: .
+    container_name:
+      webAPI_container
+    networks:
+      - application_net
+    ports:
+      - "8081:8080"  
+    depends_on:
+      - postgres
+
+  adminer:
+    image: adminer
+    container_name: adminer
+    networks:
+      - application_net
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
 
 networks:
- application_net:
-  driver:
-   bridge
+  application_net:
+    driver:
+     bridge
 
 volumes:
-    sqlserver_volume:
+  postgres-data:

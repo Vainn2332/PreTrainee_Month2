@@ -23,7 +23,7 @@ builder.Services.AddTransient<IUserService,UserService>();
 builder.Services.AddDbContext<DBContext>(
     options =>
     {
-        options.UseSqlServer(@"Server= mssqlserver_container;Database=PreTraineeMonth2_DB;Trusted_Connection=true;"
+        options.UseSqlServer(@"Server=mssqlserver_container;Database=PreTraineeMonth2_DB;UserId=sa;Password=SukaBlyad123;TrustServerCertificate=true;"
         , b => b.MigrationsAssembly("PreTrainee_Month2"));
     });
 var app = builder.Build();
