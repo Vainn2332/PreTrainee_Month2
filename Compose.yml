@@ -9,8 +9,6 @@
       - POSTGRES_DB=mydata
     volumes:
       - postgres-data:/var/lib/postgresql/data
-    networks:
-      - application_net
     ports:
       - "5432:5432"
  
@@ -19,8 +17,6 @@
     build: .
     container_name:
       webAPI_container
-    networks:
-      - application_net
     ports:
       - "8081:8080"  
     depends_on:
@@ -29,8 +25,6 @@
   adminer:
     image: adminer
     container_name: adminer
-    networks:
-      - application_net
     ports:
       - "8080:8080"
     depends_on:
