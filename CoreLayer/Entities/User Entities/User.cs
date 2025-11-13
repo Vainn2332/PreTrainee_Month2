@@ -1,4 +1,5 @@
-﻿using PreTrainee_Month2.CoreLayer.Product_Entities;
+﻿using PreTrainee_Month2.CoreLayer.Entities.User_Entities;
+using PreTrainee_Month2.CoreLayer.Product_Entities;
 using PreTrainee_Month2.CoreLayer.User_Entities;
 
 namespace PreTrainee_Month2.CoreLayer
@@ -13,10 +14,7 @@ namespace PreTrainee_Month2.CoreLayer
         //для связи
         public List<Product> Products { get; set; } = [];
 
-        public User()
-        {
-        
-        }
+     
         public User(UserDTO userDTO)
         {
             Name = userDTO.Name;
@@ -28,6 +26,16 @@ namespace PreTrainee_Month2.CoreLayer
                 Product product = new Product(item);
                 Products.Add(product);
             }
+        }
+        public User(UserPostAndPutDTO userPostAndPutDTO)
+        {
+            Name = userPostAndPutDTO.Name;
+            EmailAddress = userPostAndPutDTO.EmailAddress;
+            Role = userPostAndPutDTO.Role;        
+        }
+        public User()
+        {
+
         }
     }
 }

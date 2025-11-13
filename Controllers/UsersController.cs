@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PreTrainee_Month2.ApplicationLayer.ServiceInterfaces;
 using PreTrainee_Month2.CoreLayer;
+using PreTrainee_Month2.CoreLayer.Entities.User_Entities;
 using PreTrainee_Month2.CoreLayer.User_Entities;
 using System.Threading.Tasks;
 
@@ -45,27 +46,27 @@ namespace PreTrainee_Month2.Controllers
         }
         // POST api/<Users>
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] UserDTO userDTO)
+        public async Task<IActionResult> Post([FromBody] UserPostAndPutDTO userPostAndPutDTO)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            User user = new User(userDTO);
+            User user = new User(userPostAndPutDTO);
             await _userService.AddUserAsync(user);
             return Ok();
         }
 
         // PUT api/<Users>/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] UserDTO userDTO)
+        public async Task<IActionResult> Put(int id, [FromBody] UserPostAndPutDTO userPostAndPutDTO)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            User user = new User(userDTO);
+            User user = new User(userPostAndPutDTO);
             await _userService.UpdateUserAsync(id, user);
             return Ok();
         }

@@ -14,7 +14,7 @@ namespace PreTrainee_Month2.CoreLayer.User_Entities
        
         [Required]
         [RegularExpression("^(user|admin)$",ErrorMessage ="Роль может быть только admin и user")]
-        public string Role { get; set; } = string.Empty;
+        public string Role { get; set; } = "user";
         
    
         public List<ProductDTO> Products { get; set; } = [];
