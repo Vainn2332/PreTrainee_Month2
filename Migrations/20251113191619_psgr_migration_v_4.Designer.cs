@@ -12,8 +12,8 @@ using PreTrainee_Month2.InfrastructureLayer.DataBaseContext;
 namespace PreTrainee_Month2.Migrations
 {
     [DbContext(typeof(DBContext))]
-    [Migration("20251111203713_psgr2.0")]
-    partial class psgr20
+    [Migration("20251113191619_psgr_migration_v_4")]
+    partial class psgr_migration_v_4
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -70,6 +70,10 @@ namespace PreTrainee_Month2.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("text");
 

@@ -10,7 +10,7 @@ namespace PreTrainee_Month2.CoreLayer
         public string Name { get; set; } = String.Empty;
         public string EmailAddress { get; set; } = String.Empty;
         public string Role { get; set; } = string.Empty;
-        
+        public string Password { get; set; }
 
         //для связи
         public List<Product> Products { get; set; } = [];
@@ -21,7 +21,7 @@ namespace PreTrainee_Month2.CoreLayer
             Name = userDTO.Name;
             EmailAddress = userDTO.EmailAddress;
             Role = userDTO.Role;
-
+            Password = userDTO.Password;
             foreach (var item in userDTO.Products)
             {
                 Product product = new Product(item);
@@ -32,7 +32,8 @@ namespace PreTrainee_Month2.CoreLayer
         {
             Name = userPostAndPutDTO.Name;
             EmailAddress = userPostAndPutDTO.EmailAddress;
-            Role = userPostAndPutDTO.Role;        
+            Role = userPostAndPutDTO.Role;
+            Password = userPostAndPutDTO.Password;
         }
         public User()
         {
