@@ -47,8 +47,11 @@ namespace PreTrainee_Month2.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] UserDTO userDTO)
         {
-           // if(!ModelState.IsValid)
-                
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("неверно введены данные!");
+            }
+
             User user = new User(userDTO);
             await _userService.AddUserAsync(user);
             return Ok();
@@ -58,6 +61,10 @@ namespace PreTrainee_Month2.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] UserDTO userDTO)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("неверно введены данные!");
+            }
             User user = new User(userDTO);
             await _userService.UpdateUserAsync(id, user);
             return Ok();

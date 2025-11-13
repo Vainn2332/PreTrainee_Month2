@@ -37,15 +37,16 @@ namespace PreTrainee_Month2.InfrastructureLayer.Repositories
         }
 
 
-        public async Task UpdateAsync(int id, Product newUser)
+        public async Task UpdateAsync(int id, Product newProduct)
         {
             await _dbContext.Products
                 .Where(p => p.ID == id)
                 .ExecuteUpdateAsync(p => p
-                .SetProperty(s => s.UserId, newUser.UserId)
-                .SetProperty(s => s.Price, newUser.Price)
-                .SetProperty(s => s.DateOfCreation, newUser.DateOfCreation)
-                .SetProperty(s => s.Description, newUser.Description));
+                .SetProperty(s => s.UserId, newProduct.UserId)
+                .SetProperty(s => s.Price, newProduct.Price)
+                .SetProperty(s => s.DateOfCreation, newProduct.DateOfCreation)
+                .SetProperty(s => s.Description, newProduct.Description)
+                .SetProperty(s => s.Name, newProduct.Name));
         }
     }
 }
