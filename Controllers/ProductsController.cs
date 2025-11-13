@@ -2,6 +2,7 @@
 using PreTrainee_Month2.ApplicationLayer.ServiceInterfaces;
 using PreTrainee_Month2.CoreLayer.Product_Entities;
 using PreTrainee_Month2.CoreLayer.Entities.Product_Entities;
+using Microsoft.AspNetCore.Authorization;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -20,6 +21,7 @@ namespace PreTrainee_Month2.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Get()
         {
             return Ok(await _productService.GetAllProductsAsync());

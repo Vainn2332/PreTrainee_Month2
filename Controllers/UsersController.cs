@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PreTrainee_Month2.ApplicationLayer.ServiceInterfaces;
 using PreTrainee_Month2.CoreLayer;
+using PreTrainee_Month2.CoreLayer.Entities.Static_Entities;
 using PreTrainee_Month2.CoreLayer.Entities.User_Entities;
 using PreTrainee_Month2.CoreLayer.User_Entities;
+using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -55,6 +57,12 @@ namespace PreTrainee_Month2.Controllers
 
             User user = new User(userPostAndPutDTO);
             await _userService.AddUserAsync(user);
+
+            var jwt = new JwtSecurityToken(
+                issuer: AuthOptions.ISSUER,
+                audience:AuthOptions.AUDIENCE,
+
+                );
             return Ok();
         }
 
