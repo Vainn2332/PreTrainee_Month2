@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using PreTrainee_Month2.CoreLayer.Entities.Product_Entities;
+using System.Text.Json.Serialization;
 
 namespace PreTrainee_Month2.CoreLayer.Product_Entities
 {
@@ -27,6 +28,12 @@ namespace PreTrainee_Month2.CoreLayer.Product_Entities
             Description = productDTO.Description;
             Price = productDTO.Price;
             UserId = productDTO.UserId;
+        }
+        public Product(ProductPutDTO productDTO)
+        {
+            Name = productDTO.Name;
+            Description = productDTO.Description;
+            Price = productDTO.Price;
         }
 
 

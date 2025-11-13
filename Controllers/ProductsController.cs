@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PreTrainee_Month2.ApplicationLayer.ServiceInterfaces;
 using PreTrainee_Month2.CoreLayer.Product_Entities;
+using PreTrainee_Month2.CoreLayer.Entities.Product_Entities;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -46,13 +47,13 @@ namespace PreTrainee_Month2.Controllers
 
         // PUT api/<ProductsController>/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] ProductDTO newProductDTO)
+        public async Task<IActionResult> Put(int id, [FromBody] ProductPutDTO newProductPutDTO)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest("неверно введены данные!");
             }
-            Product newProduct = new Product(newProductDTO);//добавить обработку сиротских записей
+            Product newProduct = new Product(newProductPutDTO);
             await _productService.UpdateProductAsync(id, newProduct);
             return Ok();
         }

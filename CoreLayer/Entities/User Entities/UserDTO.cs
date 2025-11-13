@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PreTrainee_Month2.CoreLayer.User_Entities
 {
-    public class UserDTO
+    public class UserDTO////////////////////////////////////добавить DTO на put и post
     {
         [Required(ErrorMessage ="Не указано имя пользователя!")]
         public string Name { get; set; } = String.Empty;

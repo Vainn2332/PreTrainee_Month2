@@ -45,16 +45,15 @@ namespace PreTrainee_Month2.ApplicationLayer.Services
         }
         public async Task UpdateProductAsync(int id, Product newProduct)
         {
-            if (id < 1)
-            {
-                throw new ArgumentException("Id не может быть <1");
-            }
 
-            var users = await _userRepository.GetAllAsync();
-            if (!users.Any(u => u.ID == newProduct.UserId))
+            var products = await _productRepository.GetAllAsync();//////////////
+            var product = products.FirstOrDefault(p=>p.ID==id);
+            if(product == null)
             {
-                throw new ArgumentException("Такого автора не существует!");
+                throw new ArgumentException("такого продукта не существует!");
             }
+            newProduct.UserId = product.UserId;
+            
 
             await _productRepository.UpdateAsync(id, newProduct);
         }

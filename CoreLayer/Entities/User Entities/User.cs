@@ -3,7 +3,7 @@ using PreTrainee_Month2.CoreLayer.User_Entities;
 
 namespace PreTrainee_Month2.CoreLayer
 {
-    public class User
+    public class User////////////////////////////////////добавить DTO на put и post
     {
         public int ID { get; set; } = 0;
         public string Name { get; set; } = String.Empty;
