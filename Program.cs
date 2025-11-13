@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using PreTrainee_Month2.ApplicationLayer.MiddleWares;
 using PreTrainee_Month2.ApplicationLayer.ServiceInterfaces;
 using PreTrainee_Month2.ApplicationLayer.Services;
 using PreTrainee_Month2.CoreLayer.Product_Entities;
@@ -33,7 +34,7 @@ var app = builder.Build();
     app.UseSwagger();
     app.UseSwaggerUI();
 //}
-
+app.UseMiddleware<ExceptionHandlerMiddleWare>();
 //app.UseHttpsRedirection();
 
 app.UseAuthorization();

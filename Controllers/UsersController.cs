@@ -49,7 +49,7 @@ namespace PreTrainee_Month2.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest("неверно введены данные!");
+                return BadRequest(ModelState);
             }
 
             User user = new User(userDTO);
@@ -63,7 +63,7 @@ namespace PreTrainee_Month2.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest("неверно введены данные!");
+                return BadRequest(ModelState);
             }
             User user = new User(userDTO);
             await _userService.UpdateUserAsync(id, user);

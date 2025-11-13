@@ -38,7 +38,7 @@ namespace PreTrainee_Month2.Controllers
         {
             if(!ModelState.IsValid)
             {
-                return BadRequest("неверно введены данные!");
+                return BadRequest(ModelState);
             }
             Product product = new Product(productDTO);
             await _productService.AddProductAsync(product);
@@ -51,7 +51,7 @@ namespace PreTrainee_Month2.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest("неверно введены данные!");
+                return BadRequest(ModelState);
             }
             Product newProduct = new Product(newProductPutDTO);
             await _productService.UpdateProductAsync(id, newProduct);
