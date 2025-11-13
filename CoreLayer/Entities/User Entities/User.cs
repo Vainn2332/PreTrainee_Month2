@@ -10,6 +10,7 @@ namespace PreTrainee_Month2.CoreLayer
         public string Name { get; set; } = String.Empty;
         public string EmailAddress { get; set; } = String.Empty;
         public string Role { get; set; } = string.Empty;
+        
 
         //для связи
         public List<Product> Products { get; set; } = [];
