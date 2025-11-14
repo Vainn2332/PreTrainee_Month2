@@ -51,5 +51,12 @@ namespace PreTrainee_Month2.ApplicationLayer.Services
                 throw new ArgumentException("id не может быть <1");
             await _userRepository.UpdateAsync(id, newUser);
         }
+
+        public async Task<User?> GetUserByEmailAsync(string email)
+        {
+            var users = await _userRepository.GetAllAsync();
+            var target=users.FirstOrDefault(u=>u.EmailAddress==email);
+            return target;
+        }
     }
 }

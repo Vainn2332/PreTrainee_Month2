@@ -29,7 +29,7 @@ namespace PreTrainee_Month2.Controllers
             }
 
             User user = new User(userPostAndPutDTO);
-            var target = _userService.GetUserAsync(user.ID);
+            var target =await  _userService.GetUserByEmailAsync(user.EmailAddress);
             if (target != null)
             {
                 return BadRequest("Такой пользователь уже существует!");
@@ -59,7 +59,7 @@ namespace PreTrainee_Month2.Controllers
             }
 
             User user = new User(userPostAndPutDTO);
-            var target = _userService.GetUserAsync(user.ID);
+            var target =await  _userService.GetUserByEmailAsync(user.EmailAddress);
             if (target == null)//если не существует
             {
                 return BadRequest("Такой пользователь не существует!");

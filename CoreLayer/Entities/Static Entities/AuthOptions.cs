@@ -7,7 +7,7 @@ namespace PreTrainee_Month2.CoreLayer.Entities.Static_Entities
     {
         public const string ISSUER = "myServer";
         public const string AUDIENCE = "myClient";
-        private const string secretKey="superSecretKeyThatOnlyIKnow";
+        private const string secretKey="superSecretKeyThatOnlyIKnowBecauseIAmTheCreator";
         public static SymmetricSecurityKey GetSymmetricSecurityKey()=>
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
            
