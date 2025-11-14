@@ -5,8 +5,9 @@ using PreTrainee_Month2.CoreLayer.Entities.Static_Entities;
 using PreTrainee_Month2.CoreLayer.Entities.User_Entities;
 using PreTrainee_Month2.CoreLayer.User_Entities;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Threading.Tasks;
-
+using Microsoft.IdentityModel.Tokens;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace PreTrainee_Month2.Controllers
@@ -46,26 +47,7 @@ namespace PreTrainee_Month2.Controllers
         {
             return Ok(await _userService.GetUserWithProductsAsync(id));
         }
-        // POST api/<Users>
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody] UserPostAndPutDTO userPostAndPutDTO)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            User user = new User(userPostAndPutDTO);
-            await _userService.AddUserAsync(user);
-
-            var jwt = new JwtSecurityToken(
-                issuer: AuthOptions.ISSUER,
-                audience:AuthOptions.AUDIENCE,
-
-                );
-            return Ok();
-        }
-
+       
         // PUT api/<Users>/5
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] UserPostAndPutDTO userPostAndPutDTO)

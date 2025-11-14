@@ -1,11 +1,13 @@
 ﻿using PreTrainee_Month2.ApplicationLayer.ServiceInterfaces;
 using PreTrainee_Month2.CoreLayer;
 using PreTrainee_Month2.CoreLayer.Repository_Interfaces;
+using System.Linq;
 
 namespace PreTrainee_Month2.ApplicationLayer.Services
 {
-    public class UserService:IUserService
-    { 
+
+    public class UserService : IUserService
+    {
         private IUserRepository _userRepository;
 
         public UserService(IUserRepository userRepository)

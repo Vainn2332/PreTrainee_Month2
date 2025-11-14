@@ -12,7 +12,7 @@ namespace PreTrainee_Month2.InfrastructureLayer.DataBaseContext
                 .WithOne(product => product.Owner)//связь один ко многим по FK UserID
                 .HasForeignKey(product => product.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
-
+            builder.HasIndex(p => p.EmailAddress).IsUnique();
             builder.HasKey(user => user.ID);
         }
     }
