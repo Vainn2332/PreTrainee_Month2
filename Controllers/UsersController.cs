@@ -3,7 +3,6 @@ using PreTrainee_Month2.ApplicationLayer.ServiceInterfaces;
 using PreTrainee_Month2.CoreLayer;
 using PreTrainee_Month2.CoreLayer.Entities.Static_Entities;
 using PreTrainee_Month2.CoreLayer.Entities.User_Entities;
-using PreTrainee_Month2.CoreLayer.User_Entities;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -50,13 +49,13 @@ namespace PreTrainee_Month2.Controllers
        
         // PUT api/<Users>/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] UserPostAndPutDTO userPostAndPutDTO)
+        public async Task<IActionResult> Put(int id, [FromBody] UserRegisterDTO userRegisterDTO)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            User user = new User(userPostAndPutDTO);
+            User user = new User(userRegisterDTO);
             await _userService.UpdateUserAsync(id, user);
             return Ok();
         }

@@ -21,21 +21,21 @@ namespace PreTrainee_Month2.Controllers
         }
         // POST api/<Users/register>
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] UserPostAndPutDTO userPostAndPutDTO)
+        public async Task<IActionResult> Register([FromBody] UserRegisterDTO userRegisterDTO)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            User user = new User(userPostAndPutDTO);
-            var target =await  _userService.GetUserByEmailAsync(user.EmailAddress);
+            
+            var target =await  _userService.GetUserByEmailAsync(userRegisterDTO.EmailAddress);
             if (target != null)
             {
                 return BadRequest("Такой пользователь уже существует!");
-            }
+            }            
 
-            var claims = new List<Claim> { new Claim(ClaimTypes.Name, user.EmailAddress) };
+            var claims = new List<Claim> { new Claim(ClaimTypes.Name, userRegisterDTO.EmailAddress) };
             var jwt = new JwtSecurityToken(
                 issuer: AuthOptions.ISSUER,
                 audience: AuthOptions.AUDIENCE,
@@ -44,28 +44,27 @@ namespace PreTrainee_Month2.Controllers
                 signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256)
                 );
             var encodedJWT = new JwtSecurityTokenHandler().WriteToken(jwt);
-
-            await _userService.AddUserAsync(user);
+            User newUser = new User(userRegisterDTO);
+            await _userService.AddUserAsync(newUser);
 
             return Ok(encodedJWT);
         }
 
         [HttpGet("login")]
-        public async Task<IActionResult> Login([FromBody] UserPostAndPutDTO userPostAndPutDTO)
+        public async Task<IActionResult> Login([FromBody] UserRegisterDTO userRegisterDTO)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            User user = new User(userPostAndPutDTO);
-            var target =await  _userService.GetUserByEmailAsync(user.EmailAddress);
+            var target =await  _userService.GetUserByEmailAsync(userRegisterDTO.EmailAddress);
             if (target == null)//если не существует
             {
-                return BadRequest("Такой пользователь не существует!");
+                return BadRequest("Такого пользователя не существует!");
             }
 
-            var claims = new List<Claim> { new Claim(ClaimTypes.Name, user.EmailAddress) };
+            var claims = new List<Claim> { new Claim(ClaimTypes.Name, target.EmailAddress) };
             var jwt = new JwtSecurityToken(
                 issuer: AuthOptions.ISSUER,
                 audience: AuthOptions.AUDIENCE,
@@ -74,8 +73,6 @@ namespace PreTrainee_Month2.Controllers
                 signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256)
                 );
             var encodedJWT = new JwtSecurityTokenHandler().WriteToken(jwt);
-
-            await _userService.AddUserAsync(user);
 
             return Ok(encodedJWT);
         }
