@@ -50,7 +50,7 @@ namespace PreTrainee_Month2.Controllers
             return Ok(encodedJWT);
         }
 
-        [HttpGet("login")]
+        [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserLoginDTO userLoginDTO)
         {
             if (!ModelState.IsValid)
