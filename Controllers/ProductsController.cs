@@ -29,6 +29,7 @@ namespace PreTrainee_Month2.Controllers
 
         // GET api/<ProductsController>/5
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<IActionResult> Get(int id)
         {
             return Ok(await _productService.GetProductAsync(id));
@@ -36,6 +37,8 @@ namespace PreTrainee_Month2.Controllers
 
         // POST api/<ProductsController>
         [HttpPost]
+        [Authorize]
+
         public async Task<IActionResult> Post([FromBody] ProductDTO productDTO)
         {
             if(!ModelState.IsValid)
@@ -49,6 +52,8 @@ namespace PreTrainee_Month2.Controllers
 
         // PUT api/<ProductsController>/5
         [HttpPut("{id}")]
+        [Authorize]
+
         public async Task<IActionResult> Put(int id, [FromBody] ProductPutDTO newProductPutDTO)
         {
             if (!ModelState.IsValid)
@@ -62,6 +67,8 @@ namespace PreTrainee_Month2.Controllers
 
         // DELETE api/<ProductsController>/5
         [HttpDelete("{id}")]
+        [Authorize]
+
         public async Task<IActionResult> Delete(int id)
         {
             await _productService.DeleteProductAsync(id);

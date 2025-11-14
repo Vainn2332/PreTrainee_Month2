@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using PreTrainee_Month2.ApplicationLayer.ServiceInterfaces;
 using PreTrainee_Month2.CoreLayer;
 using PreTrainee_Month2.CoreLayer.Entities.Static_Entities;
@@ -6,7 +8,6 @@ using PreTrainee_Month2.CoreLayer.Entities.User_Entities;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.IdentityModel.Tokens;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace PreTrainee_Month2.Controllers
@@ -24,6 +25,8 @@ namespace PreTrainee_Month2.Controllers
 
         // GET: api/<Users>
         [HttpGet]
+        [Authorize]
+
         public async Task<IActionResult> Get()
         {
             return Ok(await _userService.GetAllUsersAsync());
@@ -37,6 +40,8 @@ namespace PreTrainee_Month2.Controllers
 
         // GET api/<Users>/5
         [HttpGet("{id}")]
+        [Authorize]
+
         public async Task<IActionResult> Get(int id)
         {
             return Ok(await _userService.GetUserAsync(id));
@@ -49,6 +54,8 @@ namespace PreTrainee_Month2.Controllers
        
         // PUT api/<Users>/5
         [HttpPut("{id}")]
+        [Authorize]
+
         public async Task<IActionResult> Put(int id, [FromBody] UserRegisterDTO userRegisterDTO)
         {
             if (!ModelState.IsValid)
@@ -62,6 +69,8 @@ namespace PreTrainee_Month2.Controllers
 
         // DELETE api/<Users>/5
         [HttpDelete("{id}")]
+        [Authorize]
+
         public async Task Delete(int id)
         {
             await _userService.DeleteUserAsync(id);

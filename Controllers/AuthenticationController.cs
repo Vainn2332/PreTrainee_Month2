@@ -51,14 +51,14 @@ namespace PreTrainee_Month2.Controllers
         }
 
         [HttpGet("login")]
-        public async Task<IActionResult> Login([FromBody] UserRegisterDTO userRegisterDTO)
+        public async Task<IActionResult> Login([FromBody] UserLoginDTO userLoginDTO)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var target =await  _userService.GetUserByEmailAsync(userRegisterDTO.EmailAddress);
+            var target =await  _userService.GetUserByEmailAsync(userLoginDTO.EmailAddress);
             if (target == null)//если не существует
             {
                 return BadRequest("Такого пользователя не существует!");
