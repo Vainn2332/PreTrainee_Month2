@@ -65,6 +65,7 @@ builder.Services.AddTransient<IUserRepository, UserRepository>();
 
 builder.Services.AddTransient<IProductService,ProductService>();
 builder.Services.AddTransient<IUserService,UserService>();
+builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddDbContext<DBContext>(
     options =>
     {
