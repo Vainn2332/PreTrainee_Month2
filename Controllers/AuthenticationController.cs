@@ -23,7 +23,7 @@ namespace PreTrainee_Month2.Controllers
         // POST api/<Users/register>
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserRegisterDTO userRegisterDTO)
-        {
+        {//отправка токена по ссылке на почту где подтверждаем регистрацию
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -44,12 +44,21 @@ namespace PreTrainee_Month2.Controllers
                 signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256)
                 );
             var encodedJWT = new JwtSecurityTokenHandler().WriteToken(jwt);
-
+            //
             User newUser = new User(userRegisterDTO);
-            await _userService.AddUserAsync(newUser);
+            var confirmationLink = Url.Action("ConfirmRegistration", "Authentication"
+                , new
+            {
+                    JWT=encodedJWT,
+                    user=newUser
+            });
+            await _emailService.SendConfirmRegistrationEmailAsync(newUser.EmailAddress, confirmationLink);
 
-            return Ok(encodedJWT);
+
+            return Ok("Подтвердите почту для регистрации");
         }
+        
+           // await _userService.AddUserAsync(newUser);
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserLoginDTO userLoginDTO)
@@ -76,6 +85,20 @@ namespace PreTrainee_Month2.Controllers
             var encodedJWT = new JwtSecurityTokenHandler().WriteToken(jwt);
 
             return Ok(encodedJWT);
+        }
+        [HttpPost("ForgotPassword")]
+        public async Task<IActionResult> forgotPassword(string email)
+        {
+            var message=@$""
+            await _emailService.SendEmailAsync(email,"Восстановление пароля","")
+        }
+        [HttpPost("Test")]
+        public async Task<IActionResult> testEmail(string email,string body)
+        {
+            await _emailService.SendEmailAsync(email, "blablalba", body);
+            
+            return Ok();
+
         }
     }
 }
