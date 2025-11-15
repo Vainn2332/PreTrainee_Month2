@@ -33,9 +33,31 @@ namespace PreTrainee_Month2.Controllers
             if (target != null)
             {
                 return BadRequest("Такой пользователь уже существует!");
-            }            
+            }
+            var notRegistreduser = new User(userRegisterDTO);
+            //добавляем пользователя(не забыть написать сервис который удаляет через время не аутентифицированных)
+            await _userService.AddUserAsync(notRegistreduser);
 
-            var claims = new List<Claim> { new Claim(ClaimTypes.Name, userRegisterDTO.EmailAddress) };
+            var confirmLink = Url.Action("ConfirmRegistration", "Authentication"
+                , new
+                {                    
+                    EmailAddress = userRegisterDTO.EmailAddress,
+                }, Request.Scheme);
+
+            await _emailService.SendConfirmRegistrationEmailAsync(userRegisterDTO.EmailAddress, confirmLink); 
+
+            return Ok("Подтвердите почту для регистрации");
+        }
+
+        [HttpGet("ConfirmRegistration")]
+        public async Task<IActionResult> ConfirmRegistration(string EmailAddress)
+        {
+            if (string.IsNullOrEmpty(EmailAddress))
+            {
+                return BadRequest("неверная ссылка подтверждения!");
+            }
+
+            var claims = new List<Claim> { new Claim(ClaimTypes.Name, EmailAddress) };
             var jwt = new JwtSecurityToken(
                 issuer: AuthOptions.ISSUER,
                 audience: AuthOptions.AUDIENCE,
@@ -44,21 +66,13 @@ namespace PreTrainee_Month2.Controllers
                 signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256)
                 );
             var encodedJWT = new JwtSecurityTokenHandler().WriteToken(jwt);
-            //
-            User newUser = new User(userRegisterDTO);
-            var confirmationLink = Url.Action("ConfirmRegistration", "Authentication"
-                , new
-            {
-                    JWT=encodedJWT,
-                    user=newUser
-            });
-            await _emailService.SendConfirmRegistrationEmailAsync(newUser.EmailAddress, confirmationLink);
+            User successfullyAuthorizedUser = await _userService.GetUserByEmailAsync(EmailAddress);
+            successfullyAuthorizedUser.HasVerifiedEmail = true;
+            await _userService.UpdateUserAsync(successfullyAuthorizedUser.ID, successfullyAuthorizedUser); 
 
-
-            return Ok("Подтвердите почту для регистрации");
+            return Ok(encodedJWT);
         }
-        
-           // await _userService.AddUserAsync(newUser);
+
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserLoginDTO userLoginDTO)
@@ -86,18 +100,41 @@ namespace PreTrainee_Month2.Controllers
 
             return Ok(encodedJWT);
         }
-        [HttpPost("ForgotPassword")]
-        public async Task<IActionResult> forgotPassword(string email)
+
+
+       /* [HttpPost("ForgotPassword")]
+        public async Task<IActionResult> ForgotPassword(string email)
         {
-            var message=@$""
-            await _emailService.SendEmailAsync(email,"Восстановление пароля","")
+
+            await _emailService.SendEmailAsync(email, "Восстановление пароля", "");
         }
+       */
+
         [HttpPost("Test")]
-        public async Task<IActionResult> testEmail(string email,string body)
+        public async Task<IActionResult> testEmail([FromBody] UserRegisterDTO userRegisterDTO)
         {
-            await _emailService.SendEmailAsync(email, "blablalba", body);
-            
-            return Ok();
+
+            var claims = new List<Claim> { new Claim(ClaimTypes.Name, userRegisterDTO.EmailAddress) };
+            var jwt = new JwtSecurityToken(
+                issuer: AuthOptions.ISSUER,
+                audience: AuthOptions.AUDIENCE,
+                claims: claims,
+                expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(5)),
+                signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256)
+                );
+            var encodedJWT = new JwtSecurityTokenHandler().WriteToken(jwt);
+            //
+            var confLink = Url.Action("ConfirmRegistration", "Authentication"
+                , new
+                {
+                    jwt = encodedJWT,
+                    emailAddress = userRegisterDTO.EmailAddress,
+                    name = userRegisterDTO.Name,
+                    password = userRegisterDTO.Password
+                }, Request.Scheme);
+
+
+            return Ok(confLink);
 
         }
     }

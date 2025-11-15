@@ -12,6 +12,6 @@ namespace PreTrainee_Month2.ApplicationLayer.ServiceInterfaces
         public  Task AddUserAsync(User user);
         public Task DeleteUserAsync(int id);
         public Task UpdateUserAsync(int id, User newUser);
-        
+
     }
 }

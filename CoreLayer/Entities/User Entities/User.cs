@@ -3,13 +3,14 @@ using PreTrainee_Month2.CoreLayer.Product_Entities;
 
 namespace PreTrainee_Month2.CoreLayer
 {
-    public class User////////////////////////////////////добавить DTO на put и post
+    public class User
     {
         public int ID { get; set; } = 0;
         public string Name { get; set; } = String.Empty;
         public string EmailAddress { get; set; } = String.Empty;
-        public string Role { get; set; } = string.Empty;
+        public string Role { get; set; } = "user";
         public string Password { get; set; }
+        public bool HasVerifiedEmail { get; set; } = false;
 
         //для связи
         public List<Product> Products { get; set; } = [];
@@ -19,7 +20,6 @@ namespace PreTrainee_Month2.CoreLayer
             Name = userRegisterDTO.Name;
             EmailAddress = userRegisterDTO.EmailAddress;
             Password = userRegisterDTO.Password;
-            Role = "user";
         }
         public User()
         {

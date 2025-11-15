@@ -12,8 +12,8 @@ using PreTrainee_Month2.InfrastructureLayer.DataBaseContext;
 namespace PreTrainee_Month2.Migrations
 {
     [DbContext(typeof(DBContext))]
-    [Migration("20251113191619_psgr_migration_v_4")]
-    partial class psgr_migration_v_4
+    [Migration("20251115202823_psgr_v4")]
+    partial class psgr_v4
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -69,6 +69,9 @@ namespace PreTrainee_Month2.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<bool>("HasVerifiedEmail")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -82,6 +85,9 @@ namespace PreTrainee_Month2.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("EmailAddress")
+                        .IsUnique();
 
                     b.ToTable("Users");
                 });

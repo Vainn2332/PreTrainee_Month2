@@ -62,15 +62,17 @@ namespace PreTrainee_Month2.Controllers
             {
                 return BadRequest(ModelState);
             }
-            User user = new User(userRegisterDTO);
+            User user = new User(userRegisterDTO)
+            {
+                HasVerifiedEmail = true
+            };
             await _userService.UpdateUserAsync(id, user);
             return Ok();
         }
 
         // DELETE api/<Users>/5
         [HttpDelete("{id}")]
-        [Authorize]
-
+       // [Authorize]
         public async Task Delete(int id)
         {
             await _userService.DeleteUserAsync(id);
