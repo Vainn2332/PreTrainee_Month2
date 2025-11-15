@@ -14,10 +14,11 @@ namespace PreTrainee_Month2.Controllers
     public class AuthenticationController : ControllerBase
     {
         private IUserService _userService;
-
-        public AuthenticationController(IUserService userService)
+        private IEmailService _emailService;
+        public AuthenticationController(IUserService userService, IEmailService emailService)
         {
             _userService = userService;
+            _emailService = emailService;
         }
         // POST api/<Users/register>
         [HttpPost("register")]
@@ -27,7 +28,6 @@ namespace PreTrainee_Month2.Controllers
             {
                 return BadRequest(ModelState);
             }
-
             
             var target =await  _userService.GetUserByEmailAsync(userRegisterDTO.EmailAddress);
             if (target != null)
@@ -44,6 +44,7 @@ namespace PreTrainee_Month2.Controllers
                 signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256)
                 );
             var encodedJWT = new JwtSecurityTokenHandler().WriteToken(jwt);
+
             User newUser = new User(userRegisterDTO);
             await _userService.AddUserAsync(newUser);
 

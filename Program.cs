@@ -21,12 +21,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options=>
 {
-    options.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new OpenApiSecurityScheme
-    {
-        Name = "Authorization",
+    options.AddSecurityDefinition("JWT", new OpenApiSecurityScheme
+    {        
+        Name = "Authorization",//как я понял данный с какого headerп брать
         Description = "Enter Bearer Authorization:",
         In = ParameterLocation.Header,
-        Type=SecuritySchemeType.ApiKey,
+        Type=SecuritySchemeType.Http,
         Scheme="Bearer"
     });
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -37,14 +37,14 @@ builder.Services.AddSwaggerGen(options=>
             Reference=new OpenApiReference
             {
                 Type=ReferenceType.SecurityScheme,
-                Id=JwtBearerDefaults.AuthenticationScheme
+                Id="JWT"
             }
         },new string[]{ }
         }
     });
 });
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+builder.Services.AddAuthentication(/*JwtBearerDefaults.AuthenticationScheme*/)
     .AddJwtBearer(options =>
     options.TokenValidationParameters = new TokenValidationParameters
     {
