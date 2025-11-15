@@ -5,7 +5,9 @@ using PreTrainee_Month2.ApplicationLayer.ServiceInterfaces;
 using PreTrainee_Month2.CoreLayer;
 using PreTrainee_Month2.CoreLayer.Entities.Static_Entities;
 using PreTrainee_Month2.CoreLayer.Entities.User_Entities;
+using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Mail;
 using System.Security.Claims;
 namespace PreTrainee_Month2.Controllers
 {
@@ -87,7 +89,10 @@ namespace PreTrainee_Month2.Controllers
             {
                 return BadRequest("Такого пользователя не существует!");
             }
-
+            if (target.Password != userLoginDTO.Password)
+            {
+                return BadRequest("Неправильный Пароль!");
+            }
             var claims = new List<Claim> { new Claim(ClaimTypes.Name, target.EmailAddress) };
             var jwt = new JwtSecurityToken(
                 issuer: AuthOptions.ISSUER,
@@ -102,19 +107,34 @@ namespace PreTrainee_Month2.Controllers
         }
 
 
-       /* [HttpPost("ForgotPassword")]
-        public async Task<IActionResult> ForgotPassword(string email)
-        {
-
-            await _emailService.SendEmailAsync(email, "Восстановление пароля", "");
+        [HttpPost("ForgotPassword")]
+        public async Task<IActionResult> ForgotPassword([FromBody] UserConfirmPassword userConfirmPassword)
+        {//такой костыль ибо пока нет времени делать фронтэнд
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Введённые данные не соответствуют почте!");
+            }
+            var target = await _userService.GetUserByEmailAsync(userConfirmPassword.EmailAddress);
+            if(target == null)
+            {
+                return BadRequest("Такого пользователя не существует!");
+            }
+            string? resetPasswordLink = Url.Action("ConfirmNewPassword", "Authentication", new
+            {
+                UserConfirmPassword = userConfirmPassword
+            });
+            await _emailService.SendResetPasswordEmailAsync(userConfirmPassword.EmailAddress,resetPasswordLink);
+            return Ok("инструкция по сбросу пароля отправлена на почту");
         }
-       */
 
-        [HttpPost("Test")]
-        public async Task<IActionResult> testEmail([FromBody] UserRegisterDTO userRegisterDTO)
+        [HttpGet("ConfirmNewPassword")]
+        public async Task<IActionResult> ConfirmNewPassword([FromBody]UserConfirmPassword userConfirmPassword)
         {
-
-            var claims = new List<Claim> { new Claim(ClaimTypes.Name, userRegisterDTO.EmailAddress) };
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var claims = new List<Claim> { new Claim(ClaimTypes.Name, userConfirmPassword.EmailAddress) };
             var jwt = new JwtSecurityToken(
                 issuer: AuthOptions.ISSUER,
                 audience: AuthOptions.AUDIENCE,
@@ -123,19 +143,13 @@ namespace PreTrainee_Month2.Controllers
                 signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256)
                 );
             var encodedJWT = new JwtSecurityTokenHandler().WriteToken(jwt);
-            //
-            var confLink = Url.Action("ConfirmRegistration", "Authentication"
-                , new
-                {
-                    jwt = encodedJWT,
-                    emailAddress = userRegisterDTO.EmailAddress,
-                    name = userRegisterDTO.Name,
-                    password = userRegisterDTO.Password
-                }, Request.Scheme);
 
+            var user = await _userService.GetUserByEmailAsync(userConfirmPassword.EmailAddress);
+            user.Password = userConfirmPassword.Password;
 
-            return Ok(confLink);
-
+            await _userService.UpdateUserAsync(user.ID, user);
+            return Ok(encodedJWT);
         }
+
     }
 }
