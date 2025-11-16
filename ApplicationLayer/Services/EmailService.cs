@@ -58,7 +58,7 @@ namespace PreTrainee_Month2.ApplicationLayer.Services
             mail.IsBodyHtml = true;
             mail.From = new MailAddress("testAuthentication@example.com", EmailServiceConfiguration.SENDER_NAME);
             mail.To.Add(receiverEmail);
-            mail.Subject = "Смена пароля";//было "Проверка пароля";
+            mail.Subject = "Смена пароля";
             mail.Body = EmailServiceConfiguration.CONFIRM_PASSWORD_CHANGE_MESSAGE + $"<a href={confirmationLink}>Сменить пароль</a>";
             using SmtpClient client = new SmtpClient(EmailServiceConfiguration.SMTP_CLIENT);
 

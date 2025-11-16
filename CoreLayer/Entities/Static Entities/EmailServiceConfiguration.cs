@@ -1,6 +1,6 @@
 ﻿namespace PreTrainee_Month2.CoreLayer.Entities.Static_Entities
 {
-    public class EmailServiceConfiguration
+    public static class EmailServiceConfiguration
     {
         public const string EMAIL_SENDER = "vladuk2332@gmail.com";
         public const string APP_PASSWORD = "phbl xkqp cowe txbq";

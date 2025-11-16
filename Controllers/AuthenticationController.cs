@@ -119,22 +119,27 @@ namespace PreTrainee_Month2.Controllers
             {
                 return BadRequest("Такого пользователя не существует!");
             }
+            if (target.HasVerifiedEmail == false)
+            {
+                return BadRequest("Аккаунт ещё не автооризован!");
+            }
             string? resetPasswordLink = Url.Action("ConfirmNewPassword", "Authentication", new
             {
-                UserConfirmPassword = userConfirmPassword
-            });
+                Password = userConfirmPassword.Password,
+                EmailAddress=userConfirmPassword.EmailAddress
+            },Request.Scheme);
             await _emailService.SendResetPasswordEmailAsync(userConfirmPassword.EmailAddress,resetPasswordLink);
             return Ok("инструкция по сбросу пароля отправлена на почту");
         }
 
         [HttpGet("ConfirmNewPassword")]
-        public async Task<IActionResult> ConfirmNewPassword([FromBody]UserConfirmPassword userConfirmPassword)
+        public async Task<IActionResult> ConfirmNewPassword(string Password,[EmailAddress]string EmailAddress)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var claims = new List<Claim> { new Claim(ClaimTypes.Name, userConfirmPassword.EmailAddress) };
+            var claims = new List<Claim> { new Claim(ClaimTypes.Name, EmailAddress) };
             var jwt = new JwtSecurityToken(
                 issuer: AuthOptions.ISSUER,
                 audience: AuthOptions.AUDIENCE,
@@ -144,8 +149,8 @@ namespace PreTrainee_Month2.Controllers
                 );
             var encodedJWT = new JwtSecurityTokenHandler().WriteToken(jwt);
 
-            var user = await _userService.GetUserByEmailAsync(userConfirmPassword.EmailAddress);
-            user.Password = userConfirmPassword.Password;
+            var user = await _userService.GetUserByEmailAsync(EmailAddress);
+            user.Password = Password;
 
             await _userService.UpdateUserAsync(user.ID, user);
             return Ok(encodedJWT);
