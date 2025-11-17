@@ -17,6 +17,8 @@
 
         public const string CONFIRM_PASSWORD_CHANGE_MESSAGE = $"<p>Для смены пароля на сайте {SENDER_NAME}, перейдите по этой ссылке:</p>";
 
-
+        public const string CONFIRM_USER_ACTIVATION_MESSAGE =
+            $"@<p> Для активации аккаунта на сайте {SENDER_NAME}, нужно подтвердить почту</p>" +
+            "<p>Для этого перейдите по этой ссылке: </p>";
     }
 }

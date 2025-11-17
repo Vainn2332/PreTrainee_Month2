@@ -93,6 +93,16 @@ namespace PreTrainee_Month2.Controllers
             {
                 return BadRequest("Неправильный Пароль!");
             }
+            if (target.HasVerifiedEmail == false)
+            {
+                var confirmLink = Url.Action("ConfirmRegistration", "Authentication"
+                , new
+                {
+                    EmailAddress = userLoginDTO.EmailAddress,
+                }, Request.Scheme);
+                await _emailService.SendUserActivationEmailAsync(userLoginDTO.EmailAddress, confirmLink);
+                return Ok("Ваш аккаунт был деактивирован.Для активации подтвердите почту");
+            }
             var claims = new List<Claim> { new Claim(ClaimTypes.Name, target.EmailAddress) };
             var jwt = new JwtSecurityToken(
                 issuer: AuthOptions.ISSUER,

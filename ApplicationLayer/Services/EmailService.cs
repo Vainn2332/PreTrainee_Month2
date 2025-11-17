@@ -31,7 +31,7 @@ namespace PreTrainee_Month2.ApplicationLayer.Services
                 client.EnableSsl = true;
                 client.Credentials = new NetworkCredential(EmailServiceConfiguration.EMAIL_SENDER, EmailServiceConfiguration.APP_PASSWORD);
                 await client.SendMailAsync(mail);
-            _logger.LogInformation($"Почта отправлена!");
+            _logger.LogInformation($"Почта успешно отправлена!");
         }
         public async Task SendConfirmRegistrationEmailAsync(string receiverEmail, string confirmationLink)
         {
@@ -48,7 +48,7 @@ namespace PreTrainee_Month2.ApplicationLayer.Services
             client.EnableSsl = true;
             client.Credentials = new NetworkCredential(EmailServiceConfiguration.EMAIL_SENDER, EmailServiceConfiguration.APP_PASSWORD);
             await client.SendMailAsync(mail);
-            _logger.LogInformation($"Почта отправлена!");
+            _logger.LogInformation($"Почта успешно отправлена!");
         }
 
         public async Task SendResetPasswordEmailAsync(string receiverEmail, string confirmationLink)
@@ -66,8 +66,24 @@ namespace PreTrainee_Month2.ApplicationLayer.Services
             client.EnableSsl = true;
             client.Credentials = new NetworkCredential(EmailServiceConfiguration.EMAIL_SENDER, EmailServiceConfiguration.APP_PASSWORD);
             await client.SendMailAsync(mail);
-            _logger.LogInformation($"Почта отправлена!");
+            _logger.LogInformation($"Почта успешно отправлена!");
         }
+        public async Task SendUserActivationEmailAsync(string receiverEmail, string confirmationLink)
+        {
+            _logger.LogInformation($"отправка почты активации аккаунта адресату {receiverEmail}");
+            var mail = new MailMessage();
+            mail.IsBodyHtml = true;
+            mail.From = new MailAddress("testAuthentication@example.com", EmailServiceConfiguration.SENDER_NAME);
+            mail.To.Add(receiverEmail);
+            mail.Subject = "Активация аккаунта";
+            mail.Body = EmailServiceConfiguration.CONFIRM_USER_ACTIVATION_MESSAGE + $"<a href={confirmationLink}>Сменить пароль</a>";
+            using SmtpClient client = new SmtpClient(EmailServiceConfiguration.SMTP_CLIENT);
 
+            client.Port = EmailServiceConfiguration.PORT;
+            client.EnableSsl = true;
+            client.Credentials = new NetworkCredential(EmailServiceConfiguration.EMAIL_SENDER, EmailServiceConfiguration.APP_PASSWORD);
+            await client.SendMailAsync(mail);
+            _logger.LogInformation($"Почта успешно отправлена!");
+        }
     }
 }
