@@ -26,7 +26,8 @@ namespace PreTrainee_Month2.InfrastructureLayer.Repositories
         }
         public async Task AddAsync(Product product)
         {
-            await _dbContext.Products.AddAsync(product);//проверить работает ли? без связующего поля
+            await _dbContext.Products.AddAsync(product);
+            await _dbContext.SaveChangesAsync();
         }
 
         public async  Task DeleteAsync(int id)

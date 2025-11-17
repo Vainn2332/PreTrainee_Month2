@@ -62,7 +62,7 @@ namespace PreTrainee_Month2.Controllers
             {
                 return BadRequest(ModelState);
             }
-            User user = new User(userRegisterDTO)
+            User user = new User(userRegisterDTO)//впринципе же только авторизованные пользователи могут менять свои личные данные
             {
                 HasVerifiedEmail = true
             };
@@ -70,8 +70,7 @@ namespace PreTrainee_Month2.Controllers
             return Ok();
         }
 
-        // DELETE api/<Users>/5
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}")]/////////////////////////////////////////
        // [Authorize]
         public async Task Delete(int id)
         {

@@ -17,21 +17,39 @@ namespace PreTrainee_Month2.ApplicationLayer.Services
         }
 
         public async Task<IEnumerable<Product>> GetAllProductsAsync()
-        {
-            return await _productRepository.GetAllAsync();
+        { 
+            var users = await _userRepository.GetAllWithProductsAsync();
+            //реализация softDelete(выбираем только у активированных пользователей)
+            var products = users.Where(u => u.HasVerifiedEmail == true).SelectMany(u => u.Products);
+
+            return products;
         }
-        public async Task<Product?> GetProductAsync(int id)
+        public async Task<Product?> GetProductAsync(int productId)
         {
-            if (id < 1)
+            if (productId < 1)
+            {
                 throw new ArgumentException("Id не может быть <1");
-            return await _productRepository.GetAsync(id);
+            }
+
+            var product = await _productRepository.GetAsync(productId);
+            if(product == null)
+            {
+                throw new ArgumentException("Данный продукт не найден!");
+            }
+
+            var user =await _userRepository.GetAsync(product.UserId);
+            if (user.HasVerifiedEmail == false)
+            {
+                throw new ArgumentException("Данный продукт деактивирован!");
+            }
+            return product;
         }
         public async Task AddProductAsync(Product product)
         {
             var users = await _userRepository.GetAllAsync();
             if(!users.Any(u => u.ID==product.UserId))
             {
-                throw new ArgumentException("Такого автора не существует!");
+                throw new ArgumentException("Владельца данного продукта не существует!");
             }    
 
             await _productRepository.AddAsync(product);
