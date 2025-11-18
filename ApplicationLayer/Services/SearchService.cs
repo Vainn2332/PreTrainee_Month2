@@ -14,34 +14,38 @@ namespace PreTrainee_Month2.ApplicationLayer.Services
             _userService = userService;
         }
 
-        public async Task<IEnumerable<Product>> FilterByDateOfCreationAsync()
+
+        public async Task<IEnumerable<Product>> FilterByNameAscendingAsync()
         {
             var products = await _productService.GetAllProductsAsync();
-            var outputProducts = products.OrderBy(p => p.DateOfCreation);
+            var outputProducts = products.OrderBy(p => p.Name);
             return outputProducts;
         }
 
-        public async Task<IEnumerable<Product>> FilterByDateOfCreationPriceAsync()
+        public async Task<IEnumerable<Product>> FilterByNameDescendingAsync()
         {
             var products = await _productService.GetAllProductsAsync();
-            var outputProducts = products.OrderBy(p => p.DateOfCreation);
+            var outputProducts = products.OrderByDescending(p => p.Name);
             return outputProducts;
         }
 
-        public Task<IEnumerable<Product>> FilterByNameAsync()
+        public async Task<IEnumerable<Product>> FilterByPriceAscendingAsync()
         {
-            throw new NotImplementedException();
+            var products = await _productService.GetAllProductsAsync();
+            var outputProducts = products.OrderBy(p => p.Price);
+            return outputProducts;
         }
 
-         public async Task<Product> SearchByDateOfCreationAsync(DateTime date)
-         {
-            throw new NotImplementedException();
-         }
-         
-
-        public async Task<Product> SearchByNameAsync(string name)
+        public  async Task<IEnumerable<Product>> FilterByPriceDescendingAsync()
         {
-            throw new NotImplementedException();
+            var products = await _productService.GetAllProductsAsync();
+            var outputProducts = products.OrderByDescending(p => p.Price);
+            return outputProducts;
+        }
+
+        public async Task<Product?> SearchByNameAsync(string name)
+        {
+            
         }
 
         public Task<Product> SearchByPriceAsync(decimal price)

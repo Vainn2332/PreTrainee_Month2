@@ -9,6 +9,7 @@ namespace PreTrainee_Month2.InfrastructureLayer.DataBaseContext
         public void Configure(EntityTypeBuilder<Product> builder)
         {
             builder.HasKey(product => product.ID);
+            builder.HasIndex(product => product.Name);
         }
     }
 }
