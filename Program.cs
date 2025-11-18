@@ -67,6 +67,7 @@ builder.Services.AddTransient<IProductService,ProductService>();
 builder.Services.AddTransient<IUserService,UserService>();
 builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddTransient<IAdminService, AdminService>();
+builder.Services.AddTransient<ISearchService, SearchService>();
 builder.Services.AddDbContext<DBContext>(
     options =>
     {

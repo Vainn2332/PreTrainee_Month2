@@ -1,5 +1,6 @@
 ﻿using PreTrainee_Month2.ApplicationLayer.ServiceInterfaces;
 using PreTrainee_Month2.CoreLayer.Product_Entities;
+using System.Xml.Linq;
 
 namespace PreTrainee_Month2.ApplicationLayer.Services
 {
@@ -45,12 +46,24 @@ namespace PreTrainee_Month2.ApplicationLayer.Services
 
         public async Task<Product?> SearchByNameAsync(string name)
         {
-            
+            var products = await _productService.GetAllProductsAsync();
+            var target =products.FirstOrDefault(p=>p.Name == name);
+            if (target == null)
+            {
+                throw new ArgumentException("Продукт с таким именем не найден!");
+            }
+            return target;
         }
 
-        public Task<Product> SearchByPriceAsync(decimal price)
+        public async Task<IEnumerable<Product>> SearchByPriceAsync(decimal price)
         {
-            throw new NotImplementedException();
+            var products = await _productService.GetAllProductsAsync();
+            var target = products.Where(p => p.Price>=(int)(price-1)&&p.Price<=(int)(price+1));
+            if (target == null)
+            {
+                throw new ArgumentException("Продукты с такой ценой не найдены!");
+            }
+            return target;
         }
     }
 }
