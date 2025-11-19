@@ -45,12 +45,16 @@ namespace PreTrainee_Month2.ApplicationLayer.Services
             return product;
         }
         public async Task AddProductAsync(Product product)
-        {
+        {          
+            char[] productName=product.Name.ToCharArray();
+            char.ToUpper(productName[0]);
+            product.Name = new string(productName);//всегда добавляем продукты с заглавной буквы
+
             var users = await _userRepository.GetAllAsync();
             if(!users.Any(u => u.ID==product.UserId))
             {
                 throw new ArgumentException("Владельца данного продукта не существует!");
-            }    
+            }
 
             await _productRepository.AddAsync(product);
         }
@@ -58,11 +62,19 @@ namespace PreTrainee_Month2.ApplicationLayer.Services
         {
             if (id < 1)
                 throw new ArgumentException("Id не может быть <1");
+            var target = await _productRepository.GetAsync(id);
+            if (target == null) 
+            {
+                throw new ArgumentException("Товар не найден!");
+            }
 
             await _productRepository.DeleteAsync(id);
         }
         public async Task UpdateProductAsync(int id, Product newProduct)
         {
+            char[] productName = newProduct.Name.ToCharArray();
+            char.ToUpper(productName[0]);
+            newProduct.Name = new string(productName);//всегда добавляем продукты с заглавной буквы
 
             var products = await _productRepository.GetAllAsync();//////////////
             var product = products.FirstOrDefault(p=>p.ID==id);
