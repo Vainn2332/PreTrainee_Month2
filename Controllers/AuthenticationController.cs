@@ -17,10 +17,12 @@ namespace PreTrainee_Month2.Controllers
     {
         private IUserService _userService;
         private IEmailService _emailService;
-        public AuthenticationController(IUserService userService, IEmailService emailService)
+        private IAuthService _authService;
+        public AuthenticationController(IUserService userService, IEmailService emailService, IAuthService authService)
         {
             _userService = userService;
             _emailService = emailService;
+            _authService = authService;
         }
         // POST api/<Users/register>
         [HttpPost("register")]
@@ -36,9 +38,8 @@ namespace PreTrainee_Month2.Controllers
             {
                 return BadRequest("Такой пользователь уже существует!");
             }
-            var notRegistreduser = new User(userRegisterDTO);
-            //добавляем пользователя(не забыть написать сервис который удаляет через время не аутентифицированных)
-            await _userService.AddUserAsync(notRegistreduser);
+            var notRegistredUser = new User(userRegisterDTO);
+            await _userService.AddUserAsync(notRegistredUser);
 
             var confirmLink = Url.Action("ConfirmRegistration", "Authentication"
                 , new
@@ -59,15 +60,9 @@ namespace PreTrainee_Month2.Controllers
                 return BadRequest("неверная ссылка подтверждения!");
             }
 
-            var claims = new List<Claim> { new Claim(ClaimTypes.Name, EmailAddress) };
-            var jwt = new JwtSecurityToken(
-                issuer: AuthOptions.ISSUER,
-                audience: AuthOptions.AUDIENCE,
-                claims: claims,
-                expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(5)),
-                signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256)
-                );
-            var encodedJWT = new JwtSecurityTokenHandler().WriteToken(jwt);
+            var target = await _userService.GetUserByEmailAsync(EmailAddress);            
+            var encodedJWT =_authService.GenerateJWT(target.ID,target.EmailAddress);
+           
             User successfullyAuthorizedUser = await _userService.GetUserByEmailAsync(EmailAddress);
             successfullyAuthorizedUser.HasVerifiedEmail = true;
             await _userService.UpdateUserAsync(successfullyAuthorizedUser.ID, successfullyAuthorizedUser); 
@@ -103,15 +98,8 @@ namespace PreTrainee_Month2.Controllers
                 await _emailService.SendUserActivationEmailAsync(userLoginDTO.EmailAddress, confirmLink);
                 return Ok("Ваш аккаунт был деактивирован.Для активации подтвердите почту");
             }
-            var claims = new List<Claim> { new Claim(ClaimTypes.Name, target.EmailAddress) };
-            var jwt = new JwtSecurityToken(
-                issuer: AuthOptions.ISSUER,
-                audience: AuthOptions.AUDIENCE,
-                claims: claims,
-                expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(5)),
-                signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256)
-                );
-            var encodedJWT = new JwtSecurityTokenHandler().WriteToken(jwt);
+            
+            var encodedJWT = _authService.GenerateJWT(target.ID,target.EmailAddress);
 
             return Ok(encodedJWT);
         }
@@ -143,26 +131,19 @@ namespace PreTrainee_Month2.Controllers
         }
 
         [HttpGet("ConfirmNewPassword")]
-        public async Task<IActionResult> ConfirmNewPassword(string Password,[EmailAddress]string EmailAddress)
+        public async Task<IActionResult> ConfirmNewPassword(string newPassword,[EmailAddress]string EmailAddress)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var claims = new List<Claim> { new Claim(ClaimTypes.Name, EmailAddress) };
-            var jwt = new JwtSecurityToken(
-                issuer: AuthOptions.ISSUER,
-                audience: AuthOptions.AUDIENCE,
-                claims: claims,
-                expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(5)),
-                signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256)
-                );
-            var encodedJWT = new JwtSecurityTokenHandler().WriteToken(jwt);
+            var target = await _userService.GetUserByEmailAsync(EmailAddress);
+           
+            var encodedJWT = _authService.GenerateJWT(target.ID,target.EmailAddress);
 
-            var user = await _userService.GetUserByEmailAsync(EmailAddress);
-            user.Password = Password;
+            target.Password = newPassword;
+            await _userService.UpdateUserAsync(target.ID, target);
 
-            await _userService.UpdateUserAsync(user.ID, user);
             return Ok(encodedJWT);
         }
 

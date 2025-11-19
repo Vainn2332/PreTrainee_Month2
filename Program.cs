@@ -68,6 +68,7 @@ builder.Services.AddTransient<IUserService,UserService>();
 builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddTransient<IAdminService, AdminService>();
 builder.Services.AddTransient<ISearchService, SearchService>();
+builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddDbContext<DBContext>(
     options =>
     {
@@ -82,7 +83,7 @@ var app = builder.Build();
     app.UseSwaggerUI();
 //}
 app.UseMiddleware<ExceptionHandlerMiddleWare>();
-//app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
