@@ -42,7 +42,14 @@ namespace PreTrainee_Month2.ApplicationLayer.Services
         public async Task DeleteUserAsync(int id)
         {
             if (id < 1)
+            {
                 throw new ArgumentException("id не может быть <1");
+            }
+            var target = await _userRepository.GetAsync(id);
+            if(target == null)
+            {
+                throw new ArgumentException("пользователь с таким id не найден");
+            }
             await _userRepository.DeleteAsync(id);
         }
         public async Task UpdateUserAsync(int id, User newUser)

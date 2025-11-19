@@ -44,13 +44,14 @@ namespace PreTrainee_Month2.ApplicationLayer.Services
             return outputProducts;
         }
 
-        public async Task<Product?> SearchByNameAsync(string name)
+        public async Task<IEnumerable<Product>> SearchByNameAsync(string name)
         {
+            char.ToUpper(name[0]);            
             var products = await _productService.GetAllProductsAsync();
-            var target =products.FirstOrDefault(p=>p.Name == name);
+            var target =products.Where(p=>p.Name == name);
             if (target == null)
             {
-                throw new ArgumentException("Продукт с таким именем не найден!");
+                throw new ArgumentException("Продуктов с таким именем не найдено!");
             }
             return target;
         }
@@ -58,7 +59,7 @@ namespace PreTrainee_Month2.ApplicationLayer.Services
         public async Task<IEnumerable<Product>> SearchByPriceAsync(decimal price)
         {
             var products = await _productService.GetAllProductsAsync();
-            var target = products.Where(p => p.Price>=(int)(price-1)&&p.Price<=(int)(price+1));
+            var target = products.Where(p => p.Price>=(int)(price-1)&&p.Price<=(int)(price+1));//диапазон +-1
             if (target == null)
             {
                 throw new ArgumentException("Продукты с такой ценой не найдены!");

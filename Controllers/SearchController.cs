@@ -19,57 +19,53 @@ namespace PreTrainee_Month2.Controllers
 
         [HttpGet("filterByNameAscending")]
         [Authorize]
-        public async Task<IEnumerable<Product>> FilterByNameAscendingAsync()
+        public async Task<IActionResult> FilterByNameAscendingAsync()
         {
-            return await _searchService.FilterByNameAscendingAsync();
+            return Ok(await _searchService.FilterByNameAscendingAsync());
         }
 
         [HttpGet("filterByNameDescending")]
         [Authorize]
-        public async Task<IEnumerable<Product>> FilterByNameDescendingAsync()
+        public async Task<IActionResult> FilterByNameDescendingAsync()
         {
-            return await _searchService.FilterByNameDescendingAsync();
+            return Ok(await _searchService.FilterByNameDescendingAsync());
         }
 
         [HttpGet("filterByPriceAscending")]
         [Authorize]
-        public async Task<IEnumerable<Product>> FilterByPriceAscendingAsync()
+        public async Task<IActionResult> FilterByPriceAscendingAsync()
         {
-            return await _searchService.FilterByPriceAscendingAsync();
+            return Ok(await _searchService.FilterByPriceAscendingAsync());
         }
 
         [HttpGet("filterByPriceDescending")]
         [Authorize]
-        public async Task<IEnumerable<Product>> FilterByPriceDescendingAsync()
+        public async Task<IActionResult> FilterByPriceDescendingAsync()
         {
-            return await _searchService.FilterByPriceDescendingAsync();
+            return Ok(await _searchService.FilterByPriceDescendingAsync());
         }
 
-        [HttpPost("searchByPrice={price}")]
+        [HttpPost("searchByPrice")]
         [Authorize]
-        public async Task<IEnumerable<Product>> SearchByPriceAsync(decimal price)
+        public async Task<IActionResult> SearchByPriceAsync(decimal price)
         {
-            if ((int)price<=0)
+            if (price<=0)
             {
-                throw new ArgumentException("Некорректно введена цена!");
+                BadRequest("Некорректно введена цена!");
             }
-            return await _searchService.SearchByPriceAsync(decimal.Round(price, 2));
+            return Ok(await _searchService.SearchByPriceAsync(decimal.Round(price, 2)));
         }
 
-        [HttpPost("searchByName={name}")]
+        [HttpPost("searchByName")]
         [Authorize]
-        public async Task<Product> SearchByNameAsync(string name)
+        public async Task<IActionResult> SearchByNameAsync(string name)
         {
             if (string.IsNullOrEmpty(name))
             {
-                throw new ArgumentException("Некорректно введена цена!");
-            }
+                BadRequest("Некорректно введена цена!");
+            }           
 
-            char[] charName = name.ToCharArray();
-            char.ToUpper(charName[0]);
-            string editedName = new string(charName);
-
-            return await _searchService.SearchByNameAsync(editedName);
+            return Ok(await _searchService.SearchByNameAsync(name));
         }
     }
 }

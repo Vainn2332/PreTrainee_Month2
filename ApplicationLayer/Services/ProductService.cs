@@ -45,10 +45,8 @@ namespace PreTrainee_Month2.ApplicationLayer.Services
             return product;
         }
         public async Task AddProductAsync(Product product)
-        {          
-            char[] productName=product.Name.ToCharArray();
-            char.ToUpper(productName[0]);
-            product.Name = new string(productName);//всегда добавляем продукты с заглавной буквы
+        {
+            char.ToUpper(product.Name[0]);//всегда добавляем продукты с заглавной буквы
 
             var users = await _userRepository.GetAllAsync();
             if(!users.Any(u => u.ID==product.UserId))
@@ -72,9 +70,7 @@ namespace PreTrainee_Month2.ApplicationLayer.Services
         }
         public async Task UpdateProductAsync(int id, Product newProduct)
         {
-            char[] productName = newProduct.Name.ToCharArray();
-            char.ToUpper(productName[0]);
-            newProduct.Name = new string(productName);//всегда добавляем продукты с заглавной буквы
+            char.ToUpper(newProduct.Name[0]);//всегда с заглавной буквы
 
             var products = await _productRepository.GetAllAsync();//////////////
             var product = products.FirstOrDefault(p=>p.ID==id);
