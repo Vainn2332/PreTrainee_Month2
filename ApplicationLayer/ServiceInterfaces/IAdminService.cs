@@ -1,4 +1,6 @@
-﻿namespace PreTrainee_Month2.ApplicationLayer.ServiceInterfaces
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace PreTrainee_Month2.ApplicationLayer.ServiceInterfaces
 {
     public interface IAdminService
     {

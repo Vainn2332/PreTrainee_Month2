@@ -18,17 +18,19 @@ namespace PreTrainee_Month2.Controllers
         private IUserService _userService;
         private IEmailService _emailService;
         private IAuthService _authService;
-       
-        public AuthenticationController(IUserService userService, IEmailService emailService, IAuthService authService)
+        private IAdminService _adminService;
+        public AuthenticationController(IUserService userService, IEmailService emailService,
+            IAuthService authService, IAdminService adminService)
         {
             _userService = userService;
             _emailService = emailService;
             _authService = authService;
+            _adminService = adminService;
         }
         // POST api/<Users/register>
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserRegisterDTO userRegisterDTO)
-        {//отправка токена по ссылке на почту где подтверждаем регистрацию
+        {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -63,13 +65,10 @@ namespace PreTrainee_Month2.Controllers
                 return BadRequest("неверная ссылка подтверждения!");
             }
 
-            var target = await _userService.GetUserByEmailAsync(EmailAddress);            
-            var encodedJWT =_authService.GenerateJWT(target.ID,target.EmailAddress);
-           
-            User successfullyAuthorizedUser = await _userService.GetUserByEmailAsync(EmailAddress);
-            successfullyAuthorizedUser.HasVerifiedEmail = true;
-            await _userService.UpdateUserAsync(successfullyAuthorizedUser.ID, successfullyAuthorizedUser); 
+            var target = await _userService.GetUserByEmailAsync(EmailAddress);
+            await _adminService.ActivateUserAsync(target.ID);
 
+            var encodedJWT =_authService.GenerateJWT(target.ID,target.EmailAddress);
             return Ok(encodedJWT);
         }
 
@@ -87,7 +86,7 @@ namespace PreTrainee_Month2.Controllers
             {
                 return BadRequest("Такого пользователя не существует!");
             }
-            if (target.Password != userLoginDTO.Password)
+            if (!BCrypt.Net.BCrypt.EnhancedVerify(userLoginDTO.Password,target.Password))
             {
                 return BadRequest("Неправильный Пароль!");
             }
@@ -110,7 +109,7 @@ namespace PreTrainee_Month2.Controllers
 
         [HttpPost("ForgotPassword")]
         public async Task<IActionResult> ForgotPassword([FromBody] UserConfirmPassword userConfirmPassword)
-        {//такой костыль ибо пока нет времени делать фронтэнд
+        {
             if (!ModelState.IsValid)
             {
                 return BadRequest("Введённые данные не соответствуют почте!");
@@ -138,15 +137,14 @@ namespace PreTrainee_Month2.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(ModelState);///////////////////////
             }
-            var target = await _userService.GetUserByEmailAsync(EmailAddress);
-           
-            var encodedJWT = _authService.GenerateJWT(target.ID,target.EmailAddress);
+            var target = await _userService.GetUserByEmailAsync(EmailAddress);           
 
-            target.Password = newPassword;
+            target.Password = BCrypt.Net.BCrypt.EnhancedHashPassword(newPassword);
             await _userService.UpdateUserAsync(target.ID, target);
 
+            var encodedJWT = _authService.GenerateJWT(target.ID,target.EmailAddress);
             return Ok(encodedJWT);
         }
 

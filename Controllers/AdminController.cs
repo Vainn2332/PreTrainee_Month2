@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PreTrainee_Month2.ApplicationLayer.ServiceInterfaces;
+using PreTrainee_Month2.ApplicationLayer.Services;
 
 namespace PreTrainee_Month2.Controllers
 {
@@ -11,34 +12,66 @@ namespace PreTrainee_Month2.Controllers
     {
         private readonly IAdminService _adminService;
         private readonly IUserService _userService;
-        public AdminController(IAdminService adminService, IUserService userService)
+        private readonly IAuthService _authService;
+        public AdminController(IAdminService adminService, IUserService userService, IAuthService authService)
         {
             _adminService = adminService;
             _userService = userService;
+            _authService = authService;
         }
 
         [HttpPost("deactivate")]
         [Authorize]
-        public async Task DeactivateUser(int userId)
+        public async Task<IActionResult> DeactivateUserAsync(int id)
         {
-            var user=await _userService.GetUserAsync(userId);
-            if(user == null)
+            if (id <= 0)
+            {
+                return BadRequest("id не может быть отрицательным!");
+            }
+
+            var jwt = _authService.GetJWTFromHeader(Request);
+            var userInfo = _authService.ParseJWT(jwt);
+
+            var currentUser = await _userService.GetUserAsync(userInfo.UserId);//проверка прав текущего пользователя
+            if (currentUser.Role != "admin")
+            {
+                return Unauthorized("У вас недостаточно прав");
+            }
+
+            var target=await _userService.GetUserAsync(id);
+            if(target == null)
             {
                 throw new ArgumentException("Пользователь не найден!");
             }
-            await _adminService.DeactivateUserAsync(userId);
+            await _adminService.DeactivateUserAsync(id);
+            return Ok();
         }
 
         [HttpPost("activate")]
         [Authorize]
-        public async Task ActivateUser(int userId)
+        public async Task<IActionResult> ActivateUserAsync(int id)
         {
-            var user = await _userService.GetUserAsync(userId);
-            if (user == null)
+            if (id <= 0)
+            {
+                return BadRequest("id не может быть отрицательным!");
+            }
+
+            var jwt = _authService.GetJWTFromHeader(Request);
+            var userInfo = _authService.ParseJWT(jwt);
+
+            var currentUser = await _userService.GetUserAsync(userInfo.UserId);//проверка прав текущего пользователя
+            if (currentUser.Role != "admin")
+            {
+                return Unauthorized("У вас недостаточно прав");
+            }
+
+            var target = await _userService.GetUserAsync(id);
+            if (target == null)
             {
                 throw new ArgumentException("Пользователь не найден!");
             }
-            await _adminService.ActivateUserAsync(userId);
+            await _adminService.ActivateUserAsync(id);
+            return Ok();
         }
     }
 }

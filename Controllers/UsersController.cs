@@ -33,6 +33,7 @@ namespace PreTrainee_Month2.Controllers
         }
 
         [HttpGet("UsersWithProducts")]
+        [Authorize]
         public async Task<IActionResult> GetUsersWithProducts()
         {
             return Ok(await _userService.GetAllUsersWithProductsAsync());
@@ -62,8 +63,16 @@ namespace PreTrainee_Month2.Controllers
             {
                 return BadRequest(ModelState);
             }
+
+            var target = await _userService.GetUserByEmailAsync(userRegisterDTO.EmailAddress);
+            if (target != null)
+            {
+                return BadRequest("данный Email уже занят другим пользователем!");
+            }
+
             User user = new User(userRegisterDTO)//впринципе же только авторизованные пользователи могут менять свои личные данные
             {
+                Password = BCrypt.Net.BCrypt.EnhancedHashPassword(userRegisterDTO.Password),
                 HasVerifiedEmail = true
             };
             await _userService.UpdateUserAsync(id, user);
@@ -71,9 +80,10 @@ namespace PreTrainee_Month2.Controllers
         }
 
         [HttpDelete("{id}")]/////////////////////////////////////////
-       // [Authorize]
+        [Authorize]
         public async Task Delete(int id)
         {
+
             await _userService.DeleteUserAsync(id);
         }
     }
