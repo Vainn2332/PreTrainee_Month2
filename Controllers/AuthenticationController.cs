@@ -18,6 +18,7 @@ namespace PreTrainee_Month2.Controllers
         private IUserService _userService;
         private IEmailService _emailService;
         private IAuthService _authService;
+       
         public AuthenticationController(IUserService userService, IEmailService emailService, IAuthService authService)
         {
             _userService = userService;

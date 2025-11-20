@@ -4,6 +4,7 @@ namespace PreTrainee_Month2.ApplicationLayer.ServiceInterfaces
 {
     public interface IUserService
     {
+        public string HashPassword(string password);
         public  Task<IEnumerable<User>> GetAllUsersWithProductsAsync();
         public Task<IEnumerable<User>> GetAllUsersAsync();
         public Task<User?> GetUserWithProductsAsync(int id);

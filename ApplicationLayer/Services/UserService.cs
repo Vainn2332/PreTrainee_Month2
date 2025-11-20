@@ -1,20 +1,24 @@
-﻿using PreTrainee_Month2.ApplicationLayer.ServiceInterfaces;
+﻿using Microsoft.AspNetCore.Identity;
+using PreTrainee_Month2.ApplicationLayer.ServiceInterfaces;
 using PreTrainee_Month2.CoreLayer;
 using PreTrainee_Month2.CoreLayer.Repository_Interfaces;
 using System.Linq;
-
 namespace PreTrainee_Month2.ApplicationLayer.Services
 {
 
     public class UserService : IUserService
     {
         private IUserRepository _userRepository;
+       
 
         public UserService(IUserRepository userRepository)
         {
             _userRepository = userRepository;
         }
-
+        public string HashPassword(string password)
+        {
+            _passwordHasher.
+        }
         public async Task<IEnumerable<User>> GetAllUsersWithProductsAsync()
         {
             return await _userRepository.GetAllWithProductsAsync();
