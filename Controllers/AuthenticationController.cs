@@ -39,7 +39,9 @@ namespace PreTrainee_Month2.Controllers
             {
                 return BadRequest("Такой пользователь уже существует!");
             }
+
             var notRegistredUser = new User(userRegisterDTO);
+            notRegistredUser.Password = _userService.HashPassword(notRegistredUser.Password);
             await _userService.AddUserAsync(notRegistredUser);
 
             var confirmLink = Url.Action("ConfirmRegistration", "Authentication"

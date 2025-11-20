@@ -3,6 +3,7 @@ using PreTrainee_Month2.ApplicationLayer.ServiceInterfaces;
 using PreTrainee_Month2.CoreLayer;
 using PreTrainee_Month2.CoreLayer.Repository_Interfaces;
 using System.Linq;
+using BCrypt.Net;
 namespace PreTrainee_Month2.ApplicationLayer.Services
 {
 
@@ -10,14 +11,18 @@ namespace PreTrainee_Month2.ApplicationLayer.Services
     {
         private IUserRepository _userRepository;
        
-
+        
         public UserService(IUserRepository userRepository)
         {
             _userRepository = userRepository;
         }
         public string HashPassword(string password)
         {
-            _passwordHasher.
+            return BCrypt.Net.BCrypt.EnhancedHashPassword(password);            
+        }
+        public bool VerifyPassword(string password,string hashedUserPassword)
+        {
+            return BCrypt.Net.BCrypt.EnhancedVerify(password, hashedUserPassword);
         }
         public async Task<IEnumerable<User>> GetAllUsersWithProductsAsync()
         {
