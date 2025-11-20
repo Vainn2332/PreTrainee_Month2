@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using PreTrainee_Month2.ApplicationLayer.ServiceInterfaces;
 using PreTrainee_Month2.CoreLayer.Entities.Static_Entities;
 using PreTrainee_Month2.CoreLayer.Entities.User_Entities;
@@ -43,5 +44,11 @@ namespace PreTrainee_Month2.ApplicationLayer.Services
             return JsonSerializer.Deserialize<UserJWTInfo>(payloadJSON);
         }
 
+        public string GetJWTFromHeader(HttpRequest request)
+        {
+            request.Headers.TryGetValue("Authorization", out var authHeader);
+            var token = authHeader.ToString().Replace("Bearer", "");
+            return token;
+        }
     }
 }
