@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PreTrainee_Month2.CoreLayer.Entities.Product_Entities
 {
-    public class ProductPutDTO
+    public class ProductPostAndPutDTO
     {
         [Required(ErrorMessage = "Поле имя обязательно")]
         public string Name { get; set; } = string.Empty;
@@ -13,7 +13,7 @@ namespace PreTrainee_Month2.CoreLayer.Entities.Product_Entities
 
         [Required(ErrorMessage = "Поле Цена обязательно")]
         [Range(0, double.MaxValue)]
-        [Column(TypeName = "decimal(18,2)")]
+        [Column(TypeName = "decimal(9,2)")]
         public decimal Price { get; set; } = 0;
     }
 }

@@ -41,13 +41,20 @@ namespace PreTrainee_Month2.Controllers
         [HttpPost]
         [Authorize]
 
-        public async Task<IActionResult> Post([FromBody] ProductDTO productDTO)
+        public async Task<IActionResult> Post([FromBody] ProductPostAndPutDTO productDTO)
         {
             if(!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            Product product = new Product(productDTO);
+
+            var jwt = _authService.GetJWTFromHeader(Request);
+            UserJWTInfo userInfo = _authService.ParseJWT(jwt);//получаем данные пользователя(email и userID) из JWT
+
+            Product product = new Product(productDTO)
+            {
+                UserId=userInfo.UserId//проверить работоспособность
+            };
             await _productService.AddProductAsync(product);
             return Ok();
         }
@@ -56,13 +63,26 @@ namespace PreTrainee_Month2.Controllers
         [HttpPut("{id}")]
         [Authorize]
 
-        public async Task<IActionResult> Put(int id, [FromBody] ProductPutDTO newProductPutDTO)
-        {
+        public async Task<IActionResult> Put(int id, [FromBody] ProductPostAndPutDTO newProductPutDTO)
+        {          
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            Product newProduct = new Product(newProductPutDTO);
+
+            var jwt = _authService.GetJWTFromHeader(Request);
+            UserJWTInfo userInfo = _authService.ParseJWT(jwt);//получаем данные пользователя(email и userID) из JWT
+
+            //если данный продукт не принадлежит текущему пользователю
+            if (!await _productService.CheckPossessionAsync(id, userInfo.UserId))
+            {
+                return Unauthorized("Вы не можете изменять чужой продукт!");
+            }
+
+            Product newProduct = new Product(newProductPutDTO)
+            {
+                UserId=userInfo.UserId
+            };
             await _productService.UpdateProductAsync(id, newProduct);
             return Ok();
         }
@@ -73,7 +93,7 @@ namespace PreTrainee_Month2.Controllers
         public async Task<IActionResult> Delete(int productId)
         {
             var jwt = _authService.GetJWTFromHeader(Request);
-            UserJWTInfo userInfo = _authService.ParseJWT(jwt);
+            UserJWTInfo userInfo = _authService.ParseJWT(jwt);//получаем данные пользователя(email и userID) из JWT
 
             //если данный продукт не принадлежит текущему пользователю
             if (!await _productService.CheckPossessionAsync(productId, userInfo.UserId))

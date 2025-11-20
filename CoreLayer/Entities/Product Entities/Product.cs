@@ -22,14 +22,8 @@ namespace PreTrainee_Month2.CoreLayer.Product_Entities
         {
                 
         }
-        public Product(ProductDTO productDTO)
-        {
-            Name = productDTO.Name;
-            Description = productDTO.Description;
-            Price = productDTO.Price;
-            UserId = productDTO.UserId;
-        }
-        public Product(ProductPutDTO productDTO)
+
+        public Product(ProductPostAndPutDTO productDTO)
         {
             Name = productDTO.Name;
             Description = productDTO.Description;
