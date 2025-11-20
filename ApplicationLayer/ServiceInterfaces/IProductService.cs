@@ -10,5 +10,6 @@ namespace PreTrainee_Month2.ApplicationLayer.ServiceInterfaces
         public Task AddProductAsync(Product user);
         public Task DeleteProductAsync(int id);
         public Task UpdateProductAsync(int id, Product newProduct);
+        public Task<bool> CheckPossessionAsync(int productId, int userId);
     }
 }

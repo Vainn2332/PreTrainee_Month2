@@ -3,6 +3,7 @@ using PreTrainee_Month2.ApplicationLayer.ServiceInterfaces;
 using PreTrainee_Month2.CoreLayer.Product_Entities;
 using PreTrainee_Month2.CoreLayer.Entities.Product_Entities;
 using Microsoft.AspNetCore.Authorization;
+using PreTrainee_Month2.CoreLayer.Entities.User_Entities;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -14,10 +15,11 @@ namespace PreTrainee_Month2.Controllers
     {
         // GET: api/<ProductsController>
         private IProductService _productService;
-
-        public ProductsController(IProductService productService)
+        private IAuthService _authService;
+        public ProductsController(IProductService productService, IAuthService authService)
         {
             _productService = productService;
+            _authService = authService;
         }
 
         [HttpGet]
@@ -66,12 +68,19 @@ namespace PreTrainee_Month2.Controllers
         }
 
         // DELETE api/<ProductsController>/5
-        [HttpDelete("{id}")]
+        [HttpDelete("{productId}")]
         [Authorize]
-
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int productId)
         {
-            await _productService.DeleteProductAsync(id);
+            var jwt = _authService.GetJWTFromHeader(Request);
+            UserJWTInfo userInfo = _authService.ParseJWT(jwt);
+
+            //если данный продукт не принадлежит текущему пользователю
+            if (!await _productService.CheckPossessionAsync(productId, userInfo.UserId))
+            {
+                return Unauthorized("Вы не можете удалить чужой продукт!");
+            }
+            await _productService.DeleteProductAsync(productId);
             return Ok();
         }
     }

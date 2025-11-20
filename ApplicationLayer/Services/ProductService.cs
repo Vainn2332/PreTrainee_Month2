@@ -16,6 +16,15 @@ namespace PreTrainee_Month2.ApplicationLayer.Services
             _userRepository = userRepository;
         }
 
+        public async Task<bool> CheckPossessionAsync(int productId, int userId)
+        {
+            var user=await _userRepository.GetWithProductsAsync(userId);
+            if (user.Products.Any(p => p.ID == productId))
+            {
+                return true;
+            }
+            return false;
+        }
         public async Task<IEnumerable<Product>> GetAllProductsAsync()
         { 
             var users = await _userRepository.GetAllWithProductsAsync();

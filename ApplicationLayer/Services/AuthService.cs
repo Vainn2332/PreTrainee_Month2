@@ -17,8 +17,8 @@ namespace PreTrainee_Month2.ApplicationLayer.Services
         {
             var claims = new List<Claim> 
             { 
-                new Claim(JwtRegisteredClaimNames.Email, userEmail),
-                new Claim(JwtRegisteredClaimNames.Sub,userId.ToString())
+                new Claim("EmailAddress", userEmail),
+                new Claim("UserId",userId.ToString(),ClaimValueTypes.Integer32)
             };
             var jwt = new JwtSecurityToken(
                 issuer: AuthOptions.ISSUER,
@@ -39,15 +39,19 @@ namespace PreTrainee_Month2.ApplicationLayer.Services
                 throw new ArgumentException("Неверный формат jwt токена!");
             }
             var payload = parts[1];
+
+            payload=payload.PadRight(payload.Length+(4-payload.Length%4)%4, '=');
+            
             var payloadBytes=Convert.FromBase64String(payload);
             var payloadJSON=Encoding.UTF8.GetString(payloadBytes);
-            return JsonSerializer.Deserialize<UserJWTInfo>(payloadJSON);
+            var userJWTInfo= JsonSerializer.Deserialize<UserJWTInfo>(payloadJSON);
+            return userJWTInfo;
         }
 
         public string GetJWTFromHeader(HttpRequest request)
         {
             request.Headers.TryGetValue("Authorization", out var authHeader);
-            var token = authHeader.ToString().Replace("Bearer", "");
+            var token = authHeader.ToString().Replace("Bearer ", "");
             return token;
         }
     }

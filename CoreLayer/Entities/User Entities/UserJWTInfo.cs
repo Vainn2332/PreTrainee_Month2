@@ -4,11 +4,8 @@ namespace PreTrainee_Month2.CoreLayer.Entities.User_Entities
 {
     public class UserJWTInfo
     {
-        [Required(ErrorMessage = "Не указан адрес")]
-        [EmailAddress]
-        public string EmailAddress { get; set; } = String.Empty;
+        public string EmailAddress { get; set; }
 
-        [Required(ErrorMessage = "Не указан пароль")]
-        public string Password { get; set; }
+        public int UserId { get; set; }
     }
 }
