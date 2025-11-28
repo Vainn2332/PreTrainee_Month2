@@ -62,7 +62,6 @@ namespace PreTrainee_Month2.Controllers
         // PUT api/<ProductsController>/5
         [HttpPut("{id}")]
         [Authorize]
-
         public async Task<IActionResult> Put(int id, [FromBody] ProductPostAndPutDTO newProductPutDTO)
         {          
             if (!ModelState.IsValid)
@@ -87,21 +86,21 @@ namespace PreTrainee_Month2.Controllers
             return Ok();
         }
 
-        // DELETE api/<ProductsController>/5
-        [HttpDelete("{productId}")]
-        [Authorize]
-        public async Task<IActionResult> Delete(int productId)
-        {
-            var jwt = _authService.GetJWTFromHeader(Request);
-            UserJWTInfo userInfo = _authService.ParseJWT(jwt);//получаем данные пользователя(email и userID) из JWT
-
-            //если данный продукт не принадлежит текущему пользователю
-            if (!await _productService.CheckPossessionAsync(productId, userInfo.UserId))
+            // DELETE api/<ProductsController>/5
+            [HttpDelete("{productId}")]
+            [Authorize]
+            public async Task<IActionResult> Delete(int productId)
             {
-                return Unauthorized("Вы не можете удалить чужой продукт!");
+                var jwt = _authService.GetJWTFromHeader(Request);
+                UserJWTInfo userInfo = _authService.ParseJWT(jwt);//получаем данные пользователя(email и userID) из JWT
+
+                //если данный продукт не принадлежит текущему пользователю
+                if (!await _productService.CheckPossessionAsync(productId, userInfo.UserId))
+                {
+                    return Unauthorized("Вы не можете удалить чужой продукт!");
+                }
+                await _productService.DeleteProductAsync(productId);
+                return Ok();
             }
-            await _productService.DeleteProductAsync(productId);
-            return Ok();
-        }
     }
 }
